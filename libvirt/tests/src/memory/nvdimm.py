@@ -383,7 +383,6 @@ def test_with_label(vm, params, test):
                 os.remove(snap_file_path)
 
 
-
 def test_hotplug(vm, params, test):
     """
     Test nvdimm device hotplug
