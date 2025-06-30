@@ -30,7 +30,13 @@ def revert_snap_and_check_files(params, vm, test, snap_name, expected_files):
     :param snap_name: snapshot name.
     :param expected_files: expected file list.
     """
-    virsh.snapshot_revert(vm.name, snap_name, **virsh_dargs)
+    snap_type = params.get("snap_type")
+    options =""
+
+    if snap_type == "disk_only" and libvirt_version.version_compare(10, 10, 0):
+        options = " --running"
+
+    virsh.snapshot_revert(vm.name,snap_name, options=options, **virsh_dargs)
 
     vm.cleanup_serial_console()
     vm.create_serial_console()
@@ -43,6 +49,7 @@ def revert_snap_and_check_files(params, vm, test, snap_name, expected_files):
 
     test.log.debug("File %s exist in guest" % expected_files)
     session.close()
+
 
 
 def run(test, params, env):
